@@ -11,10 +11,10 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/success/:name',
+      path: '/registration-confirmed',
       name: 'success',
       component: SuccessView,
-      props: true
+      props: route => ({ name: route.query.name })
     }
   ]
 })

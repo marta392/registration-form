@@ -91,11 +91,11 @@ export default {
 			const phonePattern = /^[0-9]*$/;
 			if (!formData.value.phone) {
 				phoneError.value = "Campo obbligatorio.";
-			}
-			else if (!phonePattern.test(formData.value.phone)) {
+			} else if (!phonePattern.test(formData.value.phone)) {
 				formData.value.phone = formData.value.phone.replace(/[^0-9]/g, "");
-			}
-			else {
+			} else if (formData.value.phone.length < 9) {
+				phoneError.value = "Il numero di telefono deve avere almeno 9 cifre.";
+			} else {
 				phoneError.value = "";
 			}
 		};
@@ -103,15 +103,12 @@ export default {
 		// Controllo campo email
 		const validateEmail = () => {
 			const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			// Verifica se l'email è vuota
 			if (!formData.value.email) {
 				emailError.value = "Campo obbligatorio.";
 			}
-			// Verifica se l'email non corrisponde al pattern
 			else if (!emailPattern.test(formData.value.email)) {
 				emailError.value = "Inserisci un indirizzo email valido.";
 			}
-			// Se l'email è valida, resetta l'errore
 			else {
 				emailError.value = "";
 			}
@@ -148,10 +145,10 @@ export default {
 					if (response.ok) {
 						router.push({
 							name: "success",
-							params: { name: formData.value.firstName },
+							query: { name: formData.value.firstName },
 						});
 					} else {
-						alert("Errore nella registrazione, DUPLICATO!!!");
+						alert("Errore nella registrazione. Riprova.");
 					}
 				} catch (error) {
 					console.error("Errore:", error);

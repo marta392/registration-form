@@ -13,7 +13,7 @@
       relativi ai corsi a cui ti sei iscritto, comprese le date di inizio, i requisiti e le modalità di accesso.
     </p><br />
     <p>Se hai domande o necessiti di ulteriori informazioni, non esitare a contattarci all'indirizzo <a
-        href="mailto:support@startech.com ">support@startech.com</a>.
+        href="mailto:support@startech.com">support@startech.com</a>.
     </p>
     <div class="button-container">
       <button @click="goHome">Torna alla home</button>
@@ -28,7 +28,7 @@ export default {
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const name = route.params.name; // Recupera il parametro 'name' dalla route
+    const name = route.query.name; // Recupera il parametro 'name' dalla query
 
     const goHome = () => {
       router.push({ name: 'home' }); // Reindirizza alla home page
