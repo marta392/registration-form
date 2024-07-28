@@ -1,0 +1,9 @@
+@import './base.css';
+
+#app {
+	background: #292929;
+	font-family: 'Montserrat', sans-serif;
+	padding: 2em;
+	min-height: 100vh;
+	display: flex;
+}
