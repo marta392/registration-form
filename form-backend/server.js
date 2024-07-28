@@ -26,12 +26,9 @@ db.connect(err => {
     console.log('Connesso a MySQL');
 });
 
-// Route per registrare o aggiornare i dati
+// Route per registrare e/o aggiornare i dati
 app.post('/register', (req, res) => {
     const { firstName, lastName, phone, email, selectedCourses } = req.body;
-
-    // Log per debug
-    console.log('Dati ricevuti:', req.body);
 
     if (!firstName || !lastName || !phone || !email || !selectedCourses) {
         return res.status(400).send('Tutti i campi sono obbligatori');
