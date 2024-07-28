@@ -44,8 +44,9 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import axios from 'axios';
 
 export default {
 	setup() {
@@ -150,7 +151,7 @@ export default {
 							params: { name: formData.value.firstName },
 						});
 					} else {
-						alert("Errore nella registrazione. Riprova.");
+						alert("Errore nella registrazione, DUPLICATO!!!");
 					}
 				} catch (error) {
 					console.error("Errore:", error);

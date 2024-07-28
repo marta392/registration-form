@@ -25,19 +25,23 @@ db.connect(err => {
     console.log('Connesso a MySQL');
 });
 
-// Route per registrare i dati
+// Route per registrare o aggiornare i dati
 app.post('/register', (req, res) => {
     const { firstName, lastName, phone, email, selectedCourses } = req.body;
-    const query = 'INSERT INTO utenti (first_name, last_name, phone, email, selected_courses) VALUES (?, ?, ?, ?, ?)';
+    const query = `
+        INSERT INTO users (first_name, last_name, phone, email, selected_courses)
+        VALUES (?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+            selected_courses = VALUES(selected_courses)
+    `;
     const values = [firstName, lastName, phone, email, selectedCourses.join(', ')];
 
-    db.query(query, values, (error, results) => {
-        if (error) {
-            console.error('Errore durante l\'inserimento:', error);
-            res.status(500).send('Errore durante la registrazione');
-        } else {
-            res.status(200).send('Registrazione avvenuta con successo');
+    db.query(query, values, (err) => {
+        if (err) {
+            console.error('Errore durante l\'inserimento o l\'aggiornamento:', err);
+            return res.status(500).send('Errore durante la registrazione');
         }
+        res.status(200).send('Registrazione o aggiornamento avvenuto con successo');
     });
 });
 
