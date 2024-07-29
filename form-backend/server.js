@@ -1,12 +1,8 @@
-// server.js
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -45,11 +41,24 @@ const generateRefreshToken = (user) => {
     return jwt.sign(user, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRATION });
 };
 
+// Funzione per autenticare i token
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401); // No token
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403); // Invalid token
+        req.user = user;
+        next(); // Proceed to the next middleware or route handler
+    });
+};
+
 // Endpoint di login
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    // Verifica credenziali (questo è un esempio, usa un metodo sicuro in produzione)
     if (username === 'testAimage' && password === 'testAimage') {
         const user = { username };
         const accessToken = generateToken(user);
@@ -61,19 +70,30 @@ app.post('/login', (req, res) => {
     }
 });
 
-// Middleware di autenticazione
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    
-    if (token == null) return res.sendStatus(401);
-    
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
+// Endpoint per registrare e/o aggiornare i dati
+app.post('/register', (req, res) => {
+    const { firstName, lastName, phone, email, selectedCourses } = req.body;
+
+    if (!firstName || !lastName || !phone || !email || !selectedCourses) {
+        return res.status(400).send('Tutti i campi sono obbligatori');
+    }
+
+    const query = `
+        INSERT INTO users (first_name, last_name, phone, email, selected_courses)
+        VALUES (?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+            selected_courses = VALUES(selected_courses)
+    `;
+    const values = [firstName, lastName, phone, email, selectedCourses.join(', ')];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error('Errore durante l\'inserimento o l\'aggiornamento:', err);
+            return res.status(500).send('Errore durante la registrazione');
+        }
+        res.status(200).send('Registrazione o aggiornamento avvenuto con successo');
     });
-};
+});
 
 // Endpoint per il refresh del token
 app.post('/token', (req, res) => {
