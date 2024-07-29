@@ -102,6 +102,7 @@ export default {
     flex-direction: column;
     padding: 2em;
     background-color: #EEEEEE;
+    flex: 1;
 }
 
 form {
@@ -171,6 +172,10 @@ form .input-box input:valid~.underline::after {
     margin-top: auto;
     text-align: center;
     padding-top: 2em;
+}
+
+.button-container p {
+    padding: 20px 0 20px 0;
 }
 
 .button-form {
