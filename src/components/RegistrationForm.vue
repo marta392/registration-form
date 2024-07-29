@@ -141,13 +141,14 @@ export default {
 						},
 						body: JSON.stringify(formData.value),
 					});
-
 					if (response.ok) {
-						router.push({
-							name: "success",
-							query: { name: formData.value.firstName },
-						});
-					} else {
+  router.push({
+    name: 'success',
+    query: { name: formData.value.firstName }, // Passa il nome tramite query params
+  });
+}
+
+					else {
 						alert("Errore nella registrazione. Riprova.");
 					}
 				} catch (error) {

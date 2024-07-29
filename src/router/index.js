@@ -14,10 +14,13 @@ const router = createRouter({
     {
       path: "/registration-confirmed",
       name: "success",
-      component: SuccessView,
-      props: (route) => ({ name: route.query.name }),
+      component: SuccessView
     },
-    { path: "/login", name: "login", component: LoginView },
+    { 
+      path: "/login", 
+      name: "login", 
+      component: LoginView 
+    },
   ],
 });
 

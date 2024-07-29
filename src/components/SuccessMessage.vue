@@ -28,7 +28,9 @@ export default {
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const name = route.query.name; // Recupera il parametro 'name' dalla query
+
+    const name = route.query.name;
+
 
     const goHome = () => {
       router.push({ name: 'home' }); // Reindirizza alla home page
