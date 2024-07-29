@@ -28,8 +28,8 @@ db.connect((err) => {
 
 // Chiave segreta per JWT
 const JWT_SECRET = "testAimage";
-const JWT_EXPIRATION = "1h"; // Durata del token di accesso
-const JWT_REFRESH_EXPIRATION = "7d"; // Durata del token di refresh
+const JWT_EXPIRATION = "1h"; 
+const JWT_REFRESH_EXPIRATION = "7d";
 
 // Funzione per generare un token JWT
 const generateToken = (user) => {
