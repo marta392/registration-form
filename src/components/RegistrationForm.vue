@@ -124,39 +124,31 @@ export default {
 		};
 
 		const submitForm = async () => {
-			// Chiama le funzioni di validazione per verificare i campi del modulo 
-			validateFirstName();
-			validateLastName();
-			validatePhone();
-			validateEmail();
-			validateSelectedCourses();
+    // Chiama le funzioni di validazione per verificare i campi del modulo
+    validateFirstName();
+    validateLastName();
+    validatePhone();
+    validateEmail();
+    validateSelectedCourses();
 
-			// Verifica se ci sono errori
-			if (!firstNameError.value && !lastNameError.value && !phoneError.value && !emailError.value && !selectedCoursesError.value) {
-				try {
-					const response = await fetch("http://localhost:3000/register", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(formData.value),
-					});
-					if (response.ok) {
-  router.push({
-    name: 'success',
-    query: { name: formData.value.firstName }, // Passa il nome tramite query params
-  });
-}
-
-					else {
-						alert("Errore nella registrazione. Riprova.");
-					}
-				} catch (error) {
-					console.error("Errore:", error);
-					alert("Errore nella registrazione. Riprova.");
-				}
-			}
-		};
+    // Verifica se ci sono errori
+    if (!firstNameError.value && !lastNameError.value && !phoneError.value && !emailError.value && !selectedCoursesError.value) {
+        try {
+            const response = await axios.post("http://localhost:3000/register", formData.value);
+            if (response.status === 200) {
+                router.push({
+                    name: 'success',
+                    query: { name: formData.value.firstName },
+                });
+            } else {
+                alert("Errore nella registrazione. Riprova.");
+            }
+        } catch (error) {
+            console.error("Errore:", error);
+            alert("Errore nella registrazione. Riprova.");
+        }
+    }
+};
 
 		return {
 			formData,
