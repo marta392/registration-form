@@ -3,19 +3,18 @@
         <h2>Login</h2>
         <form @submit.prevent="submitLoginForm">
             <div class="input-box">
-                <input type="text" id="username" v-model="username" placeholder="Username" 
-                    @input="validateUsername" />
+                <input type="text" id="username" v-model="username" placeholder="Username" @input="validateUsername" />
                 <div class="underline"></div>
                 <p v-if="usernameError" class="error-message">{{ usernameError }}</p>
             </div>
             <div class="input-box">
-                <input type="password" id="password" v-model="password" placeholder="Password" 
+                <input type="password" id="password" v-model="password" placeholder="Password"
                     @input="validatePassword" />
                 <div class="underline"></div>
                 <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
             </div>
-            <p v-if="loginError" class="error-message">{{ loginError }}</p>
             <div class="button-container">
+                <p v-if="loginError" class="error-message">{{ loginError }}</p>
                 <button class="button-form" type="submit">Login</button>
             </div>
         </form>
@@ -75,10 +74,9 @@ export default {
                     const data = await response.json();
                     localStorage.setItem('accessToken', data.accessToken);
                     localStorage.setItem('refreshToken', data.refreshToken);
-                    loginError.value = ''; // Resetta l'errore di login
-                    alert('Login effettuato con successo'); // Considera di rimuovere questo alert in produzione
+                    loginError.value = '';
                 } else {
-                    loginError.value = 'Credenziali non valide';
+                    loginError.value = 'Credenziali non valide!';
                 }
             } catch (error) {
                 console.error('Errore durante il login:', error);
