@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="data-container">
-            <table class="table-container" v-if="data.length">
+            <table v-if="data.length">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -85,18 +85,10 @@ export default {
 <style scoped>
 .dashboard {
     display: flex;
-    flex-direction: column;
-padding: 2em;
     flex: 1;
-    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 2em;
     background-color: #EEEEEE;
-}
-
-.data-head {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    flex: 1;
 }
 
 .dashboard h2 {
@@ -137,8 +129,8 @@ padding: 2em;
 }
 
 /* Table */
-.table-container {
-    overflow-x: auto;
+.data-container {
+    overflow: scroll;
 }
 
 table {

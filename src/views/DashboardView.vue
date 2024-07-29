@@ -10,9 +10,9 @@ import DashboardData from "../components/DashboardData.vue";
 
 <style scoped>
 .container {
-    display: flex;
+display: flex;
     flex-direction: column;
     flex: 1;
-    overflow: scroll;
+    overflow: hidden;
 }
 </style>
