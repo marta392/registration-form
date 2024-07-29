@@ -3,13 +3,18 @@
         <h2>Login</h2>
         <form @submit.prevent="submitLoginForm">
             <div class="input-box">
-                <input type="text" id="username" placeholder="Username" v-model="username" required />
+                <input type="text" id="username" v-model="username" placeholder="Username" 
+                    @input="validateUsername" />
                 <div class="underline"></div>
+                <p v-if="usernameError" class="error-message">{{ usernameError }}</p>
             </div>
             <div class="input-box">
-                <input type="password" id="password" placeholder="Password" v-model="password" required />
+                <input type="password" id="password" v-model="password" placeholder="Password" 
+                    @input="validatePassword" />
                 <div class="underline"></div>
+                <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
             </div>
+            <p v-if="loginError" class="error-message">{{ loginError }}</p>
             <div class="button-container">
                 <button class="button-form" type="submit">Login</button>
             </div>
@@ -18,18 +23,85 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
 
 export default {
     setup() {
+        const username = ref('');
+        const password = ref('');
 
+        const usernameError = ref('');
+        const passwordError = ref('');
+        const loginError = ref('');
+
+        const validateUsername = () => {
+            if (!username.value) {
+                usernameError.value = "Campo obbligatorio.";
+            } else {
+                usernameError.value = "";
+            }
+        };
+
+        const validatePassword = () => {
+            if (!password.value) {
+                passwordError.value = "Campo obbligatorio.";
+            } else {
+                passwordError.value = "";
+            }
+        };
+
+        const submitLoginForm = async () => {
+            validateUsername();
+            validatePassword();
+
+            // Verifica che non ci siano errori di validazione
+            if (usernameError.value || passwordError.value) {
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username.value,
+                        password: password.value,
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('accessToken', data.accessToken);
+                    localStorage.setItem('refreshToken', data.refreshToken);
+                    loginError.value = ''; // Resetta l'errore di login
+                    alert('Login effettuato con successo'); // Considera di rimuovere questo alert in produzione
+                } else {
+                    loginError.value = 'Credenziali non valide';
+                }
+            } catch (error) {
+                console.error('Errore durante il login:', error);
+                loginError.value = 'Errore durante il login. Riprova.';
+            }
+        };
+
+        return {
+            username,
+            password,
+            submitLoginForm,
+            usernameError,
+            passwordError,
+            loginError
+        };
     },
 };
 </script>
 
 <style scoped>
 .login-container {
+    display: flex;
+    flex-direction: column;
     padding: 2em;
     background-color: #EEEEEE;
 }
@@ -118,5 +190,12 @@ form .input-box input:valid~.underline::after {
 
 .button-form:hover {
     opacity: 0.7;
+}
+
+/* Error messages */
+.error-message {
+    margin: 5px 0 5px 0;
+    color: #F00404;
+    font-size: 12px;
 }
 </style>
