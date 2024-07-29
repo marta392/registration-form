@@ -41,23 +41,37 @@ const generateRefreshToken = (user) => {
     return jwt.sign(user, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRATION });
 };
 
-// Funzione per autenticare i token
+// Middleware per verificare il token
 const authenticateToken = (req, res, next) => {
+    console.log('Entering authenticateToken middleware');
     const authHeader = req.headers['authorization'];
+    console.log('authHeader:', authHeader);
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) return res.sendStatus(401); // No token
+    console.log('token:', token); // Assicurati che ci sia console.log
+
+    if (!token) {
+        console.log('No token found');
+        return res.sendStatus(401);
+    }
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403); // Invalid token
+        if (err) {
+            console.log('Token verification failed:', err);
+            return res.sendStatus(403);
+        }
         req.user = user;
-        next(); // Proceed to the next middleware or route handler
+        console.log('Token verified, user:', user);
+        next();
     });
 };
 
 // Endpoint di login
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
+
+    console.log('Username:', username);
+    console.log('Password:', password);
 
     if (username === 'testAimage' && password === 'testAimage') {
         const user = { username };
@@ -69,6 +83,8 @@ app.post('/login', (req, res) => {
         res.status(401).send('Credenziali non valide');
     }
 });
+
+
 
 // Endpoint per registrare e/o aggiornare i dati
 app.post('/register', (req, res) => {
@@ -107,7 +123,8 @@ app.post('/token', (req, res) => {
     });
 });
 
-// Endpoint per recuperare i dati raccolti (protetto da JWT)
+
+// Endpoint protetto per recuperare i dati
 app.get('/data', authenticateToken, (req, res) => {
     const query = 'SELECT * FROM users';
     
