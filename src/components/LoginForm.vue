@@ -8,8 +8,7 @@
                 <p v-if="usernameError" class="error-message">{{ usernameError }}</p>
             </div>
             <div class="input-box">
-                <input type="password" id="password" v-model="password" placeholder="Password"
-                    @input="validatePassword" />
+                <input type="password" id="password" v-model="password" placeholder="Password" @input="validatePassword" />
                 <div class="underline"></div>
                 <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
             </div>
@@ -23,6 +22,8 @@
 
 <script>
 import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
     setup() {
@@ -32,6 +33,8 @@ export default {
         const usernameError = ref('');
         const passwordError = ref('');
         const loginError = ref('');
+
+        const router = useRouter();
 
         const validateUsername = () => {
             if (!username.value) {
@@ -53,34 +56,32 @@ export default {
             validateUsername();
             validatePassword();
 
-            // Verifica che non ci siano errori di validazione
             if (usernameError.value || passwordError.value) {
                 return;
             }
 
             try {
-                const response = await fetch('http://localhost:3000/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username.value,
-                        password: password.value,
-                    }),
+                const response = await axios.post('http://localhost:3000/login', {
+                    username: username.value,
+                    password: password.value
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('accessToken', data.accessToken);
-                    localStorage.setItem('refreshToken', data.refreshToken);
-                    loginError.value = '';
-                } else {
-                    loginError.value = 'Credenziali non valide!';
-                }
+                const { accessToken, refreshToken } = response.data;
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                loginError.value = '';
+
+                // Redirige alla pagina di visualizzazione dei dati
+                router.push('/dashboard');
             } catch (error) {
+                if (error.response) {
+                    loginError.value = error.response.data || 'Credenziali non valide!';
+                } else if (error.request) {
+                    loginError.value = 'Errore di rete. Riprova.';
+                } else {
+                    loginError.value = 'Errore durante il login. Riprova.';
+                }
                 console.error('Errore durante il login:', error);
-                loginError.value = 'Errore durante il login. Riprova.';
             }
         };
 
