@@ -16,5 +16,6 @@ import SuccessMessage from "../components/SuccessMessage.vue";
   box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   margin: 0 auto;
+  align-self: center;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-      <BannerForm />
-      <RegistrationForm />
+    <BannerForm />
+    <RegistrationForm />
   </div>
 </template>
 
@@ -18,10 +18,11 @@ import RegistrationForm from "../components/RegistrationForm.vue";
 }
 
 @media (min-width: 768px) {
-.container {
-  display: flex;
-  max-width: 800px;
-  margin: 0 auto;
+  .container {
+    display: flex;
+    max-width: 800px;
+    margin: 0 auto;
+    align-self: center;
   }
 }
 </style>
